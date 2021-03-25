@@ -1,5 +1,4 @@
 <?php
-include("../db.php");
 
 
 class User {
@@ -25,12 +24,22 @@ class User {
             $statement->bindParam(":email_IN", $user_email_IN);
 
             if( !$statement->execute() ) {
-                echo "Could not execute query!";
+                echo "Could not Create 'CreateUser', please try again!";
                 die();
             }
 
+            // Checking all rows to see if there is a user with the same username OR email 
+            $num_rows = $statement->rowCount();
+            if($num_rows > 0) {
+                echo "The user already exists, please log in with your email and password";
+            }
+
+
+            echo $username_IN . "<br />" . $user_email_IN;
 
         }
+
+        
     }
 }
 
