@@ -1,8 +1,14 @@
 # E-com REST API
 
 
+<h3>Individual assignment in System development </h3>
+Doing an API for an e-commerce platform, you can administrate products, get products, sort products and user administration for customers
+<br />
+<h3> Built with PHP 8 </h3> <br />
+Create a database called 'webshop' to connect to database.sql 
 
-ERROR CODES - <br />
+
+<h3> ERROR CODES - <br /> </h3>
 
 'statusCode': 0001 = The email is non existing
 

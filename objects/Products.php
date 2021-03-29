@@ -20,6 +20,7 @@ class Products {
 
         
         if(!$statement->execute()) {
+            $error = new stdClass();
             $error->message = "Could not execute query";
             $error->code = "0005";
             print_r(json_encode($error));
@@ -28,6 +29,7 @@ class Products {
 
         $all_rows = $statement->rowCount();
         if($all_rows > 0) {
+            $error = new stdClass();
             $error->message = "This product is already created";
             $error->code = "0006";
             print_r(json_encode($error));
@@ -41,10 +43,11 @@ class Products {
         $statement->bindParam(":product_price_IN", $product_price_IN);
 
         if(!$statement->execute()) {
+            $error = new stdClass();
             $error->message = "Could not create product";
             $error->code = "0007";
             print_r(json_encode($error));
-            die(;
+            die();
         }
 
         $this->productname = $product_name_IN;
@@ -53,7 +56,9 @@ class Products {
 
         echo "The product sucessfully created. Product name: $this->procutname, Description: $this->description, Price: $this->price";
         die();
+        
     } else {
+        $error = new stdClass();
         $error->message = "All fields are required!";
         $error->code = "0007";
         print_r(json_encode($error));
