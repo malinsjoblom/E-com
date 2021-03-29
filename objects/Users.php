@@ -12,8 +12,8 @@ class User {
         $this->database_connection = $db;
     }
 
-    function CreateUser($username_IN, $user_email_IN, $user_password_IN) {
-        if(!empty($username_IN) && !empty($user_email_IN) && !empty($user_password_IN)) {
+    function CreateUser($username_IN, $user_email_IN, $password_IN) {
+        if(!empty($username_IN) && !empty($user_email_IN) && !empty($password_IN)) {
         
             $sql = "SELECT id FROM users WHERE username=:username_IN OR email=:email_IN";
             $statement = $this->database_connection->prepare($sql);
@@ -35,8 +35,8 @@ class User {
                 die();
             }
 
-            $user_password = $user_password_IN;
-            $user_password = password_hash($user_password, PASSWORD_DEFAULT);
+            $password_IN = $password_IN;
+            $password_IN = password_hash($password_IN, PASSWORD_DEFAULT);
 
             echo "<br /> USERNAME: $username_IN  <br /> EMAIL: $user_email_IN";
 
@@ -45,7 +45,7 @@ class User {
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":username_IN", $username_IN);
         $statement->bindParam(":email_IN", $user_email_IN);
-        $statement->bindParam(":password_IN", $user_password_IN);
+        $statement->bindParam(":password_IN", $password_IN);
 
         if( !$statement->execute() ) {
             echo "Something went wrong, please try again!";
@@ -81,7 +81,7 @@ class User {
 
     if( !$statement->execute() || $statement->rowCount() < 1) {
         $error = new stdClass();
-        $error->message = "This user does not exist, try register this email";
+        $error->message = "This user does not exist, try register your email";
         $error->code = "0001";
         print_r(json_encode($error));
         die();
@@ -115,11 +115,11 @@ class User {
     }
 
 
-    function Login($username_IN, $user_password_IN) {
-        $sql = "SELECT id, username, email, role FROM users WHERE username =:username_IN AND password=:password_IN";
+    function Login($username_IN, $password_IN) {
+        $sql = "SELECT id, username, email, role FROM users WHERE username=:username_IN AND password=:password_IN";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":username_IN", $username_IN);
-        $statement->bindParam(":password_IN", $user_password_IN);
+        $statement->bindParam(":password_IN", $password_IN);
         $statement->execute();
 
         // If the right username and password has been provided a token is created
