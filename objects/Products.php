@@ -54,9 +54,9 @@ class Products {
         $this->description = $product_description_IN;
         $this->price = $product_price_IN;
 
-        echo "The product sucessfully created. Product name: $this->procutname, Description: $this->description, Price: $this->price";
+        echo "The product is sucessfully created. Product name - $this->procutname, Description - $this->description, Price - $this->price";
         die();
-        
+
     } else {
         $error = new stdClass();
         $error->message = "All fields are required!";
@@ -64,10 +64,12 @@ class Products {
         print_r(json_encode($error));
         die();
     }
+}
 
-
-
-    }
+function getAllProducts() {
+    $sql = "SELECT id, ProductName FROM products";
+    $statement = $this->database_connection->prepare($sql);
+}
     
 
 

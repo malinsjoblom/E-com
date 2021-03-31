@@ -15,10 +15,10 @@ class User {
     function CreateUser($username_IN, $user_email_IN, $password_IN) {
         if(!empty($username_IN) && !empty($user_email_IN) && !empty($password_IN)) {
         
-            $sql = "SELECT id FROM users WHERE username=:username_IN OR email=:email_IN";
+            $sql = "SELECT id FROM users WHERE username=:username_IN OR email=:user_email_IN";
             $statement = $this->database_connection->prepare($sql);
             $statement->bindParam(":username_IN", $username_IN);
-            $statement->bindParam(":email_IN", $user_email_IN);
+            $statement->bindParam(":user_email_IN", $user_email_IN);
 
             if( !$statement->execute() ) {
                 echo "Could not Create 'CreateUser', please try again!";
@@ -41,21 +41,19 @@ class User {
             echo "<br /> USERNAME: $username_IN  <br /> EMAIL: $user_email_IN";
 
 
-        $sql = "INSERT INTO users (username, email, password, role) VALUES(:username_IN, :email_IN, :password_IN, 'user')";
+        $sql = "INSERT INTO users (username, email, password, role) VALUES(:username_IN, :user_email_IN, :password_IN, 'user')";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":username_IN", $username_IN);
-        $statement->bindParam(":email_IN", $user_email_IN);
+        $statement->bindParam(":user_email_IN", $user_email_IN);
         $statement->bindParam(":password_IN", $password_IN);
 
-        if( !$statement->execute() ) {
+        /* if(!$statement->execute() ) {
             echo "Something went wrong, please try again!";
             die();
-        }
+        } */
 
         $this->username = $username_IN;
         $this->user_email = $user_email_IN;
-
-        
         die();
     
     } else {
