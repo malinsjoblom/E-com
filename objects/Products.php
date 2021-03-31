@@ -1,79 +1,95 @@
 <?php
 
-class products {
+class products
+{
     private $database_connection;
     private $product_id;
     private $product_name;
     private $product_desc;
     private $product_price;
-    
-    function __construct($db) {
-    $this->database_connection = $db;
+
+    function __construct($db)
+    {
+        $this->database_connection = $db;
     }
 
-    function createProduct($product_name_IN, $product_desc_IN, $product_price_IN) {
+    function createProduct($product_name_IN, $product_desc_IN, $product_price_IN)
+    {
 
-        $error = new stdClass();
         if (!empty($product_name_IN) && !empty($product_desc_IN)) {
 
-        $sql = "SELECT id FROM Products WHERE product_name = :product_name_IN";
-        $statement = $this->database_connection->prepare($sql);
-        $statement->bindParam(":product_name_IN", $product_name_IN);
+            $sql = "SELECT product_id FROM Products WHERE product = :product_name_IN";
+            $statement = $this->database_connection->prepare($sql);
+            $statement->bindParam(":product_name_IN", $product_name_IN);
 
-        
-        if(!$statement->execute()) {
-            $error->message = "Could not create product";
-            $error->code = "0005";
-            print_r(json_encode($error));
+
+            if (!$statement->execute()) {
+                $error = new stdClass();
+                $error->message = "Could not create product";
+                $error->code = "0005";
+                print_r(json_encode($error));
+                die();
+            }
+
+            $num_rows = $statement->rowCount();
+            if ($num_rows > 0) {
+                $error = new stdClass();
+                $error->message = "This product is already created";
+                $error->code = "0006";
+                print_r(json_encode($error));
+                die();
+            }
+
+
+            $sql = "INSERT INTO products (product, description, price) VALUES (:product_name_IN, :product_desc_IN, :product_price_IN)";
+            $statement = $this->database_connection->prepare($sql);
+            $statement->bindParam(":product_name_IN", $product_name_IN);
+            $statement->bindParam(":product_desc_IN", $product_desc_IN);
+            $statement->bindParam(":product_price_IN", $product_price_IN);
+
+            if (!$statement->execute()) {
+                $error = new stdClass();
+                $error->message = "Could not create product, fill all fields";
+                $error->code = "0007";
+                print_r(json_encode($error));
+                die();
+            }
+
+            $this->productname = $product_name_IN;
+            $this->description = $product_desc_IN;
+            $this->price = $product_price_IN;
+
+            echo "The product is sucessfully created. Product name - $this->productname, Description - $this->description, Price - $this->price";
             die();
-        }
-
-        $all_rows = $statement->rowCount();
-        if($all_rows > 0) {
+        } else {
             $error = new stdClass();
-            $error->message = "This product is already created";
-            $error->code = "0006";
-            print_r(json_encode($error));
-            die();
-        }
-
-        $sql = "INSERT INTO products (ProductName, description, price) VALUES (:product_name_IN, :product_desc_IN, :product_price_IN)";
-        $statement = $this->database_connection->prepare($sql);
-        $statement->bindParam(":product_name_IN", $product_name_IN);
-        $statement->bindParam(":product_desc_IN", $product_desc_IN);
-        $statement->bindParam(":product_price_IN", $product_price_IN);
-
-        if(!$statement->execute()) {
-            $error = new stdClass();
-            $error->message = "Could not create product, fill all fields";
+            $error->message = "All fields are required!";
             $error->code = "0007";
             print_r(json_encode($error));
             die();
         }
+    }
 
-        $this->productname = $product_name_IN;
-        $this->description = $product_desc_IN;
-        $this->price = $product_price_IN;
+    function getAllProducts()
+    {
+        $sql = "SELECT product_id, ProductName FROM products";
+        $statement = $this->database_connection->prepare($sql);
+    }
 
-        echo "The product is sucessfully created. Product name - $this->procutname, Description - $this->description, Price - $this->price";
-        die();
+    function deleteProduct($product_id)
+    {
+        $sql = "DELETE FROM products WHERE id =:product_id_IN";
+        $statement = $this->db_connection->prepare($sql);
+        $statement->bindParam(":product_id_IN", $product_id);
+        $statement->execute();
 
-    } else {
-        $error = new stdClass();
-        $error->message = "All fields are required!";
-        $error->code = "0007";
-        print_r(json_encode($error));
-        die();
+        $message = new stdClass();
+        if ($statement->rowCount() > 0) {
+            $message->text = "The product with id $product_id was deleted!";
+            return $message;
+        } else {
+            $message->text = "The id was not found, please try again";
+            return $message;
+        }
     }
 }
-
-function getAllProducts() {
-    $sql = "SELECT id, ProductName FROM products";
-    $statement = $this->database_connection->prepare($sql);
-}
-    
-
-
-
-}
-?>

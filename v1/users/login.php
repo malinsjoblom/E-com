@@ -9,6 +9,3 @@ $user = new User($pdo);
 $return = new stdClass();
 $return->token = $user->Login($username_IN, $password_IN);
 print_r(json_encode($return));
-
-
-?>
