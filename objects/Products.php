@@ -1,18 +1,20 @@
 <?php
 
-class Products {
+class products {
     private $database_connection;
     private $product_id;
     private $product_name;
-    private $product_description;
+    private $product_desc;
     private $product_price;
     
     function __construct($db) {
     $this->database_connection = $db;
     }
 
-    function createProduct($product_name_IN, $product_description_IN, $product_price_IN) {
-        if (!empty($product_name_IN) && !empty($product_description_IN)) {
+    function createProduct($product_name_IN, $product_desc_IN, $product_price_IN) {
+
+        $error = new stdClass();
+        if (!empty($product_name_IN) && !empty($product_desc_IN)) {
 
         $sql = "SELECT id FROM Products WHERE product_name = :product_name_IN";
         $statement = $this->database_connection->prepare($sql);
@@ -20,8 +22,7 @@ class Products {
 
         
         if(!$statement->execute()) {
-            $error = new stdClass();
-            $error->message = "Could not execute query";
+            $error->message = "Could not create product";
             $error->code = "0005";
             print_r(json_encode($error));
             die();
@@ -36,22 +37,22 @@ class Products {
             die();
         }
 
-        $sql = "INSERT INTO products (ProductName, description, price) VALUES (:product_name_IN, :product_description_IN, :product_price_IN)";
+        $sql = "INSERT INTO products (ProductName, description, price) VALUES (:product_name_IN, :product_desc_IN, :product_price_IN)";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":product_name_IN", $product_name_IN);
-        $statement->bindParam(":product_description_IN", $product_description_IN);
+        $statement->bindParam(":product_desc_IN", $product_desc_IN);
         $statement->bindParam(":product_price_IN", $product_price_IN);
 
         if(!$statement->execute()) {
             $error = new stdClass();
-            $error->message = "Could not create product";
+            $error->message = "Could not create product, fill all fields";
             $error->code = "0007";
             print_r(json_encode($error));
             die();
         }
 
         $this->productname = $product_name_IN;
-        $this->description = $product_description_IN;
+        $this->description = $product_desc_IN;
         $this->price = $product_price_IN;
 
         echo "The product is sucessfully created. Product name - $this->procutname, Description - $this->description, Price - $this->price";

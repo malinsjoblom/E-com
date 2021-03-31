@@ -18,7 +18,7 @@ Create a database called 'webshop' to connect to database.sql
 
 'statusCode': 0004 = You need an ID to specifiy a user
 
-'statusCode': 0005 = Could not create a new Product
+'statusCode': 0005 = Could not execute this query   
 
 'statusCode': 0006 = The product has the same values as an already existing product
 

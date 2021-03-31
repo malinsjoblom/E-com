@@ -47,10 +47,10 @@ class User {
         $statement->bindParam(":user_email_IN", $user_email_IN);
         $statement->bindParam(":password_IN", $password_IN);
 
-        /* if(!$statement->execute() ) {
+         if(!$statement->execute() ) {
             echo "Something went wrong, please try again!";
             die();
-        } */
+        } 
 
         $this->username = $username_IN;
         $this->user_email = $user_email_IN;
@@ -96,24 +96,8 @@ class User {
 
 }
 
-    function DeleteUser($user_id) {
-        $sql = "DELETE FROM users WHERE id=:user_id_IN";
-        $statement = $this->database_connection->prepare($sql);
-        $statement->bindParam("user_id_IN", $user_id);
-        $statement->execute();
-
-        $message = new stdClass();
-        if($statement->rowCount() > 0) {
-            $message->text = "The user with id $user_id was removed!";
-            return $message;
-        }
-
-        $message->text = "The user with id=$user_id is not existing";
-        return $message;
-    }
-
-
     function Login($username_IN, $password_IN) {
+
         $sql = "SELECT id, username, email, role FROM users WHERE username=:username_IN AND password=:password_IN";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":username_IN", $username_IN);
