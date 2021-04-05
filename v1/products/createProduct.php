@@ -3,15 +3,15 @@
 include("../../config/db.php");
 include("../../objects/Products.php");
 
-//if(isset($_GET['product_name']) && isset($_GET['product_desc']) && isset($_GET['price'])) {
+//if(isset($_GET['product']) && isset($_GET['description']) && isset($_GET['price'])) {
 
-    $product_name_IN = $_GET['product_name_IN'];
-    $product_desc_IN = $_GET['product_desc_IN'];
-    $product_price_IN = $_GET['product_price_IN'];
+    $product_IN = $_GET['product_IN'];
+    $description_IN = $_GET['description_IN'];
+    $price_IN = $_GET['price_IN'];
 
     $product = new products($pdo);
 
-    $product->CreateProduct($product_name_IN, $product_desc_IN, $product_price_IN);
-    $return = $product->CreateProduct($product_name_IN, $product_desc_IN, $product_price_IN);
+    $product->CreateProduct($product_IN, $description_IN, $price_IN);
+    $return = $product->CreateProduct($product_IN, $description_IN, $price_IN);
     print_r(json_encode($product));
 //}

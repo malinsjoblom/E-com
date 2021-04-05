@@ -4,23 +4,23 @@ class products
 {
     private $database_connection;
     private $product_id;
-    private $product_name;
-    private $product_desc;
-    private $product_price;
+    private $product;
+    private $description;
+    private $price;
 
     function __construct($db)
     {
         $this->database_connection = $db;
     }
 
-    function createProduct($product_name_IN, $product_desc_IN, $product_price_IN)
+    function createProduct($product_IN, $description_IN, $price_IN)
     {
 
-        if (!empty($product_name_IN) && !empty($product_desc_IN)) {
+        if (!empty($product_IN) && !empty($description_IN)) {
 
-            $sql = "SELECT product_id FROM Products WHERE product = :product_name_IN";
+            $sql = "SELECT product_id FROM Products WHERE product = :product_IN";
             $statement = $this->database_connection->prepare($sql);
-            $statement->bindParam(":product_name_IN", $product_name_IN);
+            $statement->bindParam(":product_IN", $product_IN);
 
 
             if (!$statement->execute()) {
@@ -41,11 +41,11 @@ class products
             }
 
 
-            $sql = "INSERT INTO products (product, description, price) VALUES (:product_name_IN, :product_desc_IN, :product_price_IN)";
+            $sql = "INSERT INTO products (product, description, price) VALUES (:product_IN, :description_IN, :price_IN)";
             $statement = $this->database_connection->prepare($sql);
-            $statement->bindParam(":product_name_IN", $product_name_IN);
-            $statement->bindParam(":product_desc_IN", $product_desc_IN);
-            $statement->bindParam(":product_price_IN", $product_price_IN);
+            $statement->bindParam(":product_IN", $product_IN);
+            $statement->bindParam(":description_IN", $description_IN);
+            $statement->bindParam(":price_IN", $price_IN);
 
             if (!$statement->execute()) {
                 $error = new stdClass();
@@ -55,9 +55,9 @@ class products
                 die();
             }
 
-            $this->productname = $product_name_IN;
-            $this->description = $product_desc_IN;
-            $this->price = $product_price_IN;
+            $this->productname = $product_IN;
+            $this->description = $description_IN;
+            $this->price = $price_IN;
 
             echo "The product is sucessfully created. Product name - $this->productname, Description - $this->description, Price - $this->price";
             die();
@@ -77,20 +77,26 @@ class products
         return $statement->fetchAll();
     }
 
-    function deleteProduct($product_id)
-    {
-        $sql = "DELETE FROM products WHERE id =:product_id_IN";
+    function deleteProduct($product_id) {
+        $sql = "DELETE FROM products WHERE product_id=:product_id_IN";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":product_id_IN", $product_id);
         $statement->execute();
 
         $message = new stdClass();
-        if ($statement->rowCount() > 0) {
-            $message->text = "The product with id $product_id was deleted!";
+        if($statement->rowCount() > 0) {
+            $message = new stdClass();
+            $message->text = "Product with id $product_id was removed!";
             return $message;
-        } else {
-            $message->text = "The id was not found, please try again";
-            return $message;
-        }
+        } 
+        $message->text = "No product with id $product_id was found, please try again!";
+        return $message;
     }
+
+    function updateProducts($product_id = "", $product = "", $description = "", $price = "") {
+        echo "$product_id $product $description $price";
+    }
+
+
+
 }
