@@ -70,16 +70,17 @@ class products
         }
     }
 
-    function getAllProducts()
-    {
-        $sql = "SELECT product_id, ProductName FROM products";
+    function getAllProducts() {
+        $sql = "SELECT * FROM products";
         $statement = $this->database_connection->prepare($sql);
+        $statement->execute();
+        return $statement->fetchAll();
     }
 
     function deleteProduct($product_id)
     {
         $sql = "DELETE FROM products WHERE id =:product_id_IN";
-        $statement = $this->db_connection->prepare($sql);
+        $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":product_id_IN", $product_id);
         $statement->execute();
 
