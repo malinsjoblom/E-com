@@ -93,8 +93,58 @@ class products
         return $message;
     }
 
-    function updateProducts($product_id = "", $product = "", $description = "", $price = "") {
-        echo "$product_id $product $description $price";
+    function updateProducts($product_id, $product = "", $description = "", $price = "") {
+        if(!empty($product)) {
+            $this->updateProductType($product_id, $product);
+        }
+        if(!empty($description)) {
+            $this->updateDescription($product_id, $description);
+        }
+        if(!empty($price)) {
+            $this->updatePrice($product_id, $price);
+        }
+    }
+
+    function updateProductType($product_id, $product) {
+        $sql = "UPDATE products SET product=: product_IN WHERE product_id=productType_id";
+        $statement = $this->database_connection->prepare($sql);
+        $statement->bindParam(":product_IN", $product);
+        $statement->bindParam(":productType_id", $product_id);
+        $statement->execute();
+
+        $error = new stdClass();
+        if($statement->rowCount() < 1) {
+            $error->text = "No product=$product was found!";
+            return $error;
+        }
+    }
+
+    function updateDescription($product_id, $description) {
+        $sql = "UPDATE products SET description=: description_IN WHERE product_id=description_id";
+        $statement = $this->database_connection->prepare($sql);
+        $statement->bindParam(":description_IN", $description);
+        $statement->bindParam(":description_id", $product_id);
+        $statement->execute();
+
+        $error = new stdClass();
+        if($statement->rowCount() < 1) {
+            $error->text = "No product=$description was found!";
+            return $error;
+        }
+    }
+
+    function updatePrice($product_id, $price) {
+        $sql = "UPDATE products SET price=: price_IN WHERE product_id=price_id";
+        $statement = $this->database_connection->prepare($sql);
+        $statement->bindParam(":price_IN", $price);
+        $statement->bindParam(":price_id", $product_id);
+        $statement->execute();
+
+        $error = new stdClass();
+        if($statement->rowCount() < 1) {
+            $error->text = "No product=$price was found!";
+            return $error;
+        }
     }
 
 

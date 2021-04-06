@@ -30,10 +30,8 @@ if(isset($_GET['price'])) {
 }
 
 $product = new products($pdo);
-echo print_r(json_encode($product->updateProducts($product_id, $product, $description, $price)));
-
-/*$products = $product->updateProducts($product_id, $product, $description, $price);
-print_r(json_encode($products)); */
+$products = $product->updateProducts($product_id, $product, $description, $price);
+print_r(json_encode($products));
 
 
 ?>
