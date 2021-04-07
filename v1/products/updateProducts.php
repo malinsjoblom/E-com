@@ -2,11 +2,6 @@
 include("../../config/db.php");
 include("../../objects/Products.php");
 
-/*$product_id = "";
-$product = "";
-$description = "";
-$price = ""; */
-
 if(empty($_GET['product_id'])) {
     $error = new stdClass();
     $error->message = "No id specified!";
@@ -17,24 +12,24 @@ if(empty($_GET['product_id'])) {
 
 if (empty($_GET['product'])) {
     $error = new stdClass();
-    $error->message = "No product specified!";
-    $error->code = "0008";
+    $error->message = "All fields are required to create this product!";
+    $error->code = "0007";
     print_r(json_encode($error));
     die();
 }
 
 if (empty($_GET['description'])) {
     $error = new stdClass();
-    $error->message = "No description specified!";
-    $error->code = "0009";
+    $error->message = "All fields are required to create this product!";
+    $error->code = "0007";
     print_r(json_encode($error));
     die();
 }
 
 if (empty($_GET['price'])) {
     $error = new stdClass();
-    $error->message = "No price specified!";
-    $error->code = "0010";
+    $error->message = "All fields are required to create this product!";
+    $error->code = "0007";
     print_r(json_encode($error));
     die();
 }
@@ -45,7 +40,12 @@ $product->updateProducts($_GET['product_id'], $_GET['product'], $_GET['descripti
 
 
 
-//OLD CODE
+//TEST CODE
+/*$product_id = "";
+$product = "";
+$description = "";
+$price = ""; */
+
 /* if(isset($_GET['product_id'])) {
     $product_id = $_GET['product_id'];
 } else {

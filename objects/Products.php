@@ -49,7 +49,7 @@ class products
 
             if (!$statement->execute()) {
                 $error = new stdClass();
-                $error->message = "Could not create product, fill all fields";
+                $error->message = "All fields are required to create this product!";
                 $error->code = "0007";
                 print_r(json_encode($error));
                 die();
@@ -63,7 +63,7 @@ class products
             die();
         } else {
             $error = new stdClass();
-            $error->message = "All fields are required!";
+            $error->message = "All fields are required to create this product!";
             $error->code = "0007";
             print_r(json_encode($error));
             die();
