@@ -23,3 +23,5 @@ Create a database called 'webshop' to connect to database.sql
 'statusCode': 0006 = The product has the same values as an already existing product
 
 'statusCode': 0007 = All fields needs to be filled
+
+'statusCode': 0008 = 

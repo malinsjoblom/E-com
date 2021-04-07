@@ -99,10 +99,9 @@ class User
         return $row;
     }
 
-    function Login($username_IN, $password_IN)
-    {
+    function Login($username_IN, $password_IN) {
 
-        $sql = "SELECT id, username, email, role FROM users WHERE username=:username_IN AND password=:password_IN";
+        $sql = "SELECT id, username, email, role FROM users WHERE username= :username_IN AND password= :password_IN";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":username_IN", $username_IN);
         $statement->bindParam(":password_IN", $password_IN);
@@ -115,11 +114,12 @@ class User
         }
     }
 
-    function CreateToken($id, $username)
-    {
+    // when the user has logged in a token is created to remember the users cart in 1 hour
+    function CreateToken($id, $username) {
+
         $checked_token = $this->CheckToken($id);
 
-        if ($checked_token != false) {
+        if($checked_token != false) {
             return $checked_token;
         }
 
@@ -127,7 +127,7 @@ class User
 
         $sql = "INSERT INTO sessions (user_id, token, last_used) VALUES(:user_id_IN, :token_IN, :last_used_IN)";
         $statement = $this->database_connection->prepare($sql);
-        $statement->bindParam("user_id_IN", $id);
+        $statement->bindParam(":user_id_IN", $id);
         $statement->bindParam(":token_IN", $token);
         $time = time();
         $statement->bindParam(":last_used_IN", $time);
@@ -135,29 +135,34 @@ class User
         $statement->execute();
 
         return $token;
+
     }
 
-    function CheckToken($id)
-    {
+    // checks if the last active token is valid and the user can be logged in for 1 hour. Then the user automatically is logged out
+    
+    function CheckToken($id) {
         $sql = "SELECT token, last_used FROM sessions WHERE user_id=:user_id_IN AND last_used > :active_time_IN LIMIT 1";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":user_id_IN", $id);
-        $active_time = time() - (60 * 60);
+        $active_time = time() - (60*60); //the users token is active for 1 hour. 
 
         $statement->bindParam(":active_time_IN", $active_time);
-
         $statement->execute();
+
 
         $return = $statement->fetch();
 
-        if (isset($return['token'])) {
+        if(isset($return['token'])) {
             return $return['token'];
         } else {
-            return false;
+            return false; // if the token is not still valid the user is logged out
         }
+
     }
-    function isTokenValid($token)
-    {
+
+    // function isTokenValid is not needed right now
+
+    /*function isTokenValid($token) {
         $sql = "SELECT token, last_used FROM sessions WHERE token=:token_IN AND last_used > :active_time_IN LIMIT 1";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":token_IN", $token);
@@ -168,5 +173,12 @@ class User
         $statement->execute();
 
         $return = $statement->fetch();
-    }
+
+        if(isset($return['token'])) {
+            return true;
+        } else {
+            return false;
+        }
+    }*/
+
 }
