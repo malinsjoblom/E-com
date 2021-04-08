@@ -1,5 +1,6 @@
-<?php
+<?php 
 include("../../config/db.php");
+include("../../objects/Cart.php");
 include("../../objects/Users.php");
 
 $token = "";
@@ -14,18 +15,13 @@ if(isset($_GET['token'])) {
 }
 
 $user = new User($pdo);
-
+$cart = new Cart($pdo);
 if($user->isTokenValid($token)) {
-    $users = $user->GetAllUsers();
-    print_r(json_encode($users));
-
+$carts = $cart->checkout($token);
+print_r(json_encode($carts));
 } else {
     $error = new stdClass();
     $error->message = "Unexpected error with token, Login again..";
     $error->code = "0003";
     print_r(json_encode($error));
 }
-
-
-
-?>

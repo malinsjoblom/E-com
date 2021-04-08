@@ -83,7 +83,7 @@ class User
 
         if (!$statement->execute() || $statement->rowCount() < 1) {
             $error = new stdClass();
-            $error->message = "This user does not exist, try register your email";
+            $error->message = "This user does not exist";
             $error->code = "0001";
             print_r(json_encode($error));
             die();
@@ -162,7 +162,7 @@ class User
 
     // function isTokenValid is not needed right now
 
-    /*function isTokenValid($token) {
+    function isTokenValid($token) {
         $sql = "SELECT token, last_used FROM sessions WHERE token=:token_IN AND last_used > :active_time_IN LIMIT 1";
         $statement = $this->database_connection->prepare($sql);
         $statement->bindParam(":token_IN", $token);
@@ -179,6 +179,6 @@ class User
         } else {
             return false;
         }
-    }*/
+    }
 
 }
